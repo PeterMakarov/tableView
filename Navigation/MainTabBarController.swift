@@ -14,11 +14,6 @@ class MainTabBarController: UITabBarController {
     //    Профиль пользователя
     let profile = ProfileViewController()
     
-    struct Post {
-        var titlse: String
-        
-    }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,14 +21,15 @@ class MainTabBarController: UITabBarController {
     }
     
     private func setupNavigationControllers() {
+        
         let FeedViewController = UINavigationController(rootViewController: userFeed)
         
+        userFeed.tabBarItem.title = "Лента пользователя"
         userFeed.tabBarItem.image = UIImage (systemName: "scroll")
         
         let ProfileViewController = UINavigationController(rootViewController: profile)
         profile.tabBarItem.title = "Профиль"
         profile.tabBarItem.image = UIImage (systemName: "person")
-        
         
         
         viewControllers = [FeedViewController, ProfileViewController]

@@ -9,62 +9,59 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
-    //    var profile = ProfileHeaderView()
-    
-    let heading: UILabel = {
-        var heading = UILabel(frame: CGRect(x: 155, y: 87, width: 200, height: 100))
-        UIFont.boldSystemFont(ofSize: 18)
-        heading.text = "Hipster cat"
-        return heading
+    let profileView: UIView = {
+        let profileView = ProfileHeaderView()
+        profileView.translatesAutoresizingMaskIntoConstraints = false
+        return profileView
     }()
     
-    let showStatus: UIButton = {
-        let showStatus = UIButton(frame: CGRect(x: 16, y: 236, width: 390, height: 60))
-        showStatus.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        showStatus.setTitle("Show status", for: .normal)
-        showStatus.tintColor = UIColor.white
-        showStatus.layer.cornerRadius = 4
-        showStatus.layer.shadowOffset = CGSize(width: 4, height: 4)
-        showStatus.layer.shadowOpacity = 1.0
-        showStatus.layer.shadowColor = UIColor.black.cgColor
-        showStatus.backgroundColor = .blue
-        return showStatus
+    private let workingScreen: UIImageView = {
+        let workingscreen = UIImageView()
+        workingscreen.backgroundColor = .lightGray
+        workingscreen.translatesAutoresizingMaskIntoConstraints = false
+        return workingscreen
     }()
     
-    let status: UITextField = {
-        let status = UITextField(frame: CGRect(x: 155, y: 172, width: 130, height: 30))
-        status.placeholder = "Waiting for something..."
-        status.textColor = UIColor.gray
-        status.font = UIFont.boldSystemFont(ofSize: 14)
-        return status
+    let newButtonDidPressed: UIButton = {
+        let newButtonDidPressed = UIButton()
+        newButtonDidPressed.setTitle("New Title", for: .normal)
+        newButtonDidPressed.backgroundColor = .systemBlue
+        newButtonDidPressed.layer.cornerRadius = 4
+        newButtonDidPressed.translatesAutoresizingMaskIntoConstraints = false
+        return newButtonDidPressed
     }()
-    
-    
-    @objc func statusTextChanged(_ textField: UITextField) {
-        restorationIdentifier = status.text
-    }
-    
-    @objc func buttonPressed(sender: UIButton!) {
-        heading.text = status.text
-        heading.text = status.text
-        print(heading.text ?? status.placeholder)
-    }
-    
-    
-    
     
     override func viewWillLayoutSubviews() {
-        let maket = ProfileHeaderView(frame: view.frame)
+        view.addSubview(newButtonDidPressed)
+        
+        NSLayoutConstraint.activate([
+            newButtonDidPressed.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            newButtonDidPressed.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            newButtonDidPressed.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+        ])
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let profileView = ProfileHeaderView(frame: CGRect(x: 0, y: 0, width: 400, height: 700))
-        profileView.viewProfile()
+        let profileView = ProfileHeaderView()
+        view.addSubview(workingScreen)
         view.addSubview(profileView)
-        view.addSubview(heading)
-        view.addSubview(showStatus)
-        view.addSubview(status)
+        profileView.frame = view.safeAreaLayoutGuide.layoutFrame
+        profileView.viewProfile()
+        
+        NSLayoutConstraint.activate([
+            profileView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            profileView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            profileView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            profileView.heightAnchor.constraint(equalToConstant: 220)
+        ])
+        
+        NSLayoutConstraint.activate([
+            workingScreen.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            workingScreen.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            workingScreen.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            workingScreen.heightAnchor.constraint(equalToConstant: 220)
+        ])
     }
     
 }

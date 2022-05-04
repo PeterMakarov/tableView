@@ -14,22 +14,49 @@ struct Post {
 
 class FeedViewController: UIViewController {
     
-    var postTitle: Post?
+//    var postTitle: Post?
+    
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+    return stackView
+    }()
+    
+    private let buttonTop: UIButton = {
+        let buttonTop = UIButton()
+        buttonTop.setTitle("Top", for: .normal)
+        buttonTop.backgroundColor = .lightGray
+        buttonTop.addTarget(self, action: #selector(tapAction), for: .touchDown)
+        buttonTop.translatesAutoresizingMaskIntoConstraints = false
+        return buttonTop
+    }()
+    
+    private let buttonBottom: UIButton = {
+        let buttonBottom = UIButton()
+        buttonBottom.setTitle("Bottom", for: .normal)
+        buttonBottom.backgroundColor = .lightGray
+        buttonBottom.addTarget(self, action: #selector(tapAction), for: .touchDown)
+        buttonBottom.translatesAutoresizingMaskIntoConstraints = false
+        return buttonBottom
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .brown
-        postButton()
-    }
-    
-    private func postButton() {
-        let button = UIButton(frame: CGRect.init(x: 0, y: 0, width: 200, height: 50))
-        button.center = view.center
-        button.setTitle("Post", for: .normal)
-        button.backgroundColor = .black
-        button.addTarget(self, action: #selector(tapAction), for: .touchUpInside)
-        view.addSubview(button)
+        view.addSubview(stackView)
         
+        [buttonTop, buttonBottom].forEach {stackView.addArrangedSubview($0) }
+        
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.widthAnchor.constraint(equalToConstant: 100),
+            stackView.heightAnchor.constraint(equalToConstant: 100)
+        ])
     }
     
     @objc private func tapAction() {

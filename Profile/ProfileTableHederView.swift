@@ -128,12 +128,13 @@ extension ProfileTableHederView: UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier) as! CustomTableViewCell
-       
+
         cell.setupCell(postModel[indexPath.row][indexPath.section])
         cell.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
-        
+
         return cell
     }()
 }

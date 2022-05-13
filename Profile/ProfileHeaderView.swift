@@ -9,6 +9,7 @@ import UIKit
 
 class ProfileHeaderView: UIView {
     
+    
     private let status: UITextField = {
         let status = UITextField()
         status.placeholder = "Waiting for something..."
@@ -34,7 +35,7 @@ class ProfileHeaderView: UIView {
     
     private let heading: UILabel = {
         var heading = UILabel()
-        UIFont.boldSystemFont(ofSize: 18)
+        heading.font = UIFont.boldSystemFont(ofSize: 18)
         heading.text = "Hipster cat"
         heading.translatesAutoresizingMaskIntoConstraints = false
         return heading
@@ -69,35 +70,47 @@ class ProfileHeaderView: UIView {
         print(heading.text ?? status.placeholder)
     }
     
-
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        viewProfile()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
     
     func viewProfile() {
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        
         [catView, heading, showStatus, status].forEach { addSubview($0) }
         
         NSLayoutConstraint.activate([
-            catView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
-            catView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            catView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
+            catView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             catView.widthAnchor.constraint(equalToConstant: 100),
             catView.heightAnchor.constraint(equalToConstant: 100)
         ])
         
         NSLayoutConstraint.activate([
-            heading.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 27),
+            heading.topAnchor.constraint(equalTo: self.topAnchor, constant: 27),
             heading.leadingAnchor.constraint(equalTo: catView.trailingAnchor, constant: 27)
         ])
-
+        
         NSLayoutConstraint.activate([
             showStatus.topAnchor.constraint(equalTo: catView.bottomAnchor, constant: 16),
             showStatus.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             showStatus.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             showStatus.heightAnchor.constraint(equalToConstant: 50)
         ])
-
+        
         NSLayoutConstraint.activate([
             status.bottomAnchor.constraint(equalTo: showStatus.topAnchor, constant: -34),
             status.leadingAnchor.constraint(equalTo: catView.trailingAnchor, constant: 27),
         ])
-
+        
     }
-
+    
 }

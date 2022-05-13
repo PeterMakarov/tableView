@@ -5,7 +5,7 @@
 //  Created by Петр Макаров on 04.04.2022.
 //
 
-import UIKit
+import UIKit 
 
     @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

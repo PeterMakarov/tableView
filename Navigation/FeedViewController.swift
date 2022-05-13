@@ -9,12 +9,11 @@ import UIKit
 
 struct Post {
     var title: String
-    
 }
 
 class FeedViewController: UIViewController {
     
-//    var postTitle: Post?
+    let postOne = Post(title: "Post")
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -60,8 +59,8 @@ class FeedViewController: UIViewController {
     }
     
     @objc private func tapAction() {
-        let vc = PostViewController()
-        vc.title = "Post"
+        let vc = InfoViewController()
+        vc.title = postOne.title
         navigationController?.pushViewController(vc, animated: true)
     }
 

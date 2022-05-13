@@ -35,6 +35,16 @@ class CustomTableViewCell: UITableViewCell {
         return $0
     }(UILabel())
     
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        layout()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func setupCell(_ model: PostModel) {
         postView.image = model.image
         nameLabel.text = model.author
@@ -47,10 +57,10 @@ class CustomTableViewCell: UITableViewCell {
     
     
     NSLayoutConstraint.activate([
-        whiteView.topAnchor.constraint(equalTo: contentView.topAnchor),
-        whiteView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-        whiteView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-        whiteView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        whiteView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
+        whiteView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+        whiteView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
+        whiteView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
         
         nameLabel.topAnchor.constraint(equalTo: whiteView.topAnchor, constant: 16),
         nameLabel.leadingAnchor.constraint(equalTo: whiteView.leadingAnchor, constant: 16),
@@ -66,12 +76,9 @@ class CustomTableViewCell: UITableViewCell {
         descriptionLabel.leadingAnchor.constraint(equalTo: whiteView.leadingAnchor, constant: 16),
         descriptionLabel.trailingAnchor.constraint(equalTo: whiteView.trailingAnchor, constant: -16),
         descriptionLabel.bottomAnchor.constraint(equalTo: whiteView.bottomAnchor, constant: -16)
-        
     ])
         
-        
     }
-    
     
 }
 

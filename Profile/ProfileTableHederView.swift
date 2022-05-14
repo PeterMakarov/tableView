@@ -11,6 +11,7 @@ class ProfileTableHederView: UIViewController {
     
     private let postModel: [[PostModel]] = PostModel.makeSomePost()
     
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -119,20 +120,16 @@ extension ProfileTableHederView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
-        } else {
             return postModel.count
-        }
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-    {
+
+            {
         let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier) as! CustomTableViewCell
 
-        cell.setupCell(postModel[indexPath.row][indexPath.section])
+                cell.setupCell(postModel[indexPath.row][indexPath.section])
         cell.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
 
         return cell

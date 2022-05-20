@@ -9,132 +9,165 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
-//    private let postModel: [[PostModel]] = PostModel.makeSomePost()
-//
-//    private lazy var tableView: UITableView = {
-//        let tableView = UITableView(frame: .zero, style: .grouped)
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
-//        tableView.dataSource = self
-//        tableView.delegate = self
-//        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.identifier)
-//        return tableView
-//    }()
+    private let postModel: [[PostModel]] = PostModel.makeSomePost()
+    
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.identifier)
+        return tableView
+    }()
+    
+    private let headerLabel: UILabel = {
+        let headerLabel = UILabel()
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.textColor = .black
+        headerLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        headerLabel.numberOfLines = 2
+        return headerLabel
+    }()
+    
+    let profileView: UIView = {
+        let profileView = ProfileHeaderView()
+        profileView.translatesAutoresizingMaskIntoConstraints = false
+        return profileView
+    }()
+    
+    private let workingScreen: UIImageView = {
+        let workingscreen = UIImageView()
+        workingscreen.backgroundColor = .lightGray
+        workingscreen.translatesAutoresizingMaskIntoConstraints = false
+        return workingscreen
+    }()
+    
+    let newButtonDidPressed: UIButton = {
+        let newButtonDidPressed = UIButton()
+        newButtonDidPressed.setTitle("New Title", for: .normal)
+        newButtonDidPressed.backgroundColor = .systemBlue
+        newButtonDidPressed.layer.cornerRadius = 4
+        newButtonDidPressed.translatesAutoresizingMaskIntoConstraints = false
+        return newButtonDidPressed
+    }()
+    
+    override func viewWillLayoutSubviews() {
+        view.addSubview(newButtonDidPressed)
+        
+        NSLayoutConstraint.activate([
+            newButtonDidPressed.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            newButtonDidPressed.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            newButtonDidPressed.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+        ])
+    }
+    
+    func tableViewLayOut() {
+        
+        view.addSubview(tableView)
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: workingScreen.bottomAnchor, constant: 0),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .lightGray
-//        view.addSubview(tableView)
-//        tableViewLayOut()
+        let profileView = ProfileHeaderView()
+        view.addSubview(workingScreen)
+        view.addSubview(profileView)
+        profileView.frame = view.safeAreaLayoutGuide.layoutFrame
+        profileView.viewProfile()
+        tableViewLayOut()
+        
+        
+        
+        view.addSubview(headerLabel)
+        
+        NSLayoutConstraint.activate([
+            headerLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 34),
+            headerLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            headerLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            headerLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            profileView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            profileView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            profileView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            profileView.heightAnchor.constraint(equalToConstant: 220)
+        ])
+        
+        NSLayoutConstraint.activate([
+            workingScreen.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            workingScreen.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            workingScreen.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            workingScreen.heightAnchor.constraint(equalToConstant: 220)
+        ])
     }
-    
-    
-//    func tableViewLayOut() {
-//
-//        NSLayoutConstraint.activate([
-//            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-//            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-//        ])
-//    }
-//
-//}
 
+
+}
 
 //     MARK: - UITableViewDataSource
 
-//extension ProfileViewController: UITableViewDataSource {
-//
-//
-//    func numberOfSection(in tableView: UITableView) -> Int {
-//        return 2
-//    }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if section == 0 {
-//            return 1
-//        } else {
-//            return postModel.count
-//        }
-//    }
-//
-//
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//            {
-//                let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier, for: indexPath) as! CustomTableViewCell
-//                cell.setupCell(postModel[indexPath.section][indexPath.row])
-//                return cell
-//            }()
-//        }
-//    }
-//
-//
-////    MARK: - UItableViewDalegate
-//
-//extension ProfileViewController: UITableViewDelegate {
-//
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//       150
-//        }
-//
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        section % 2 == 0 ? 150 : 50
-//    }
-//
-//}
+extension ProfileViewController: UITableViewDataSource {
+    
+    
+    func numberOfSection(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return postModel.count
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        {
+            let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier) as! CustomTableViewCell
+            
+            cell.setupCell(postModel[indexPath.section][indexPath.row])
+            
+            return cell
+        }()
+    }
+}
 
 
-//        if indexPath.section == 0 {
-//            return 150
-//        } else {
-//            return UITableView.automaticDimension
-//        }
-//    }
+//    MARK: - UItableViewDalegate
 
-//
-//    //        func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//    //            let header = CustomHeaderView()
-//    //            let text = "Это хедер секции \(section)"
-//    //            header.setupHeader(text: text)
-//    //            return header
-//    //        }
-//
-//    //        func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-//    //            let header = CustomHeaderView()
-//    //            let text = "Это футор секции \(section)"
-//    //            header.setupHeader(text: text)
-//    //            return header
-//    //        }
-//
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        if section == 0 {
-//            return 200
-//        } else {
-//            return 0
-//        }
-//    }
-//
+extension ProfileViewController: UITableViewDelegate {
+    
+    
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        UITableView.automaticDimension
+    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let detailVC = PostViewController()
+        detailVC.setupVC(model: postModel[indexPath.section][indexPath.row])
+        navigationController?.pushViewController(detailVC, animated: true)
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 64.0
+    }
+    
+    
+
 //    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 //
-//        if section == 0 {
-//            let phv = ProfileHeaderView()
-//            return phv
-//        } else {
-//            return nil
-//        }
+//        guard section == 0 { return nil }
+//        return ProfileTableHederView()
 //    }
-//
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //        tableView.deselectRow(at: indexPath, animated: true)
-        //            let detailVC = DetailViewController()
-        //            detailVC.setupVC(model: carModel[indexPath.section][indexPath.row])
-        //            navigationController?.pushViewController(detailVC, animated: true)
-        //        present(detailVC, animated: true)
-//    }
-//
-//}
-
-
+    
 }

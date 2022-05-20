@@ -14,6 +14,8 @@ class ProfileHeaderView: UIView {
         let status = UITextField()
         status.placeholder = "Waiting for something..."
         status.textColor = UIColor.gray
+        status.backgroundColor = .white
+        status.layer.cornerRadius = 10
         status.font = UIFont.boldSystemFont(ofSize: 14)
         status.translatesAutoresizingMaskIntoConstraints = false
         return status
@@ -22,7 +24,7 @@ class ProfileHeaderView: UIView {
     private let showStatus: UIButton = {
         let showStatus = UIButton()
         showStatus.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        showStatus.setTitle("Show status", for: .normal)
+        showStatus.setTitle("Set status", for: .normal)
         showStatus.tintColor = UIColor.white
         showStatus.layer.cornerRadius = 4
         showStatus.layer.shadowOffset = CGSize(width: 4, height: 4)
@@ -109,6 +111,8 @@ class ProfileHeaderView: UIView {
         NSLayoutConstraint.activate([
             status.bottomAnchor.constraint(equalTo: showStatus.topAnchor, constant: -34),
             status.leadingAnchor.constraint(equalTo: catView.trailingAnchor, constant: 27),
+            status.heightAnchor.constraint(equalToConstant: 40),
+            status.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16)
         ])
         
     }

@@ -103,14 +103,12 @@ class LogInViewController: UIViewController {
         let bzz = UIImpactFeedbackGenerator(style: .light)
         bzz.prepare()
         bzz.impactOccurred()
-        let vc = ProfileTableHederView()
+        let vc = ProfileViewController()
         navigationController?.pushViewController(vc, animated: false)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let profileView = ProfileHeaderView()
-//        view.addSubview(profileView)
         view.backgroundColor = .white
         var colorSet = hexStringToUIColor(hex: "#4885CC")
         buttonDidPressed.backgroundColor = colorSet

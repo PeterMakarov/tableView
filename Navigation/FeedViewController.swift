@@ -60,7 +60,7 @@ class FeedViewController: UIViewController {
     
     @objc private func tapAction() {
         let vc = InfoViewController()
-        vc.title = postOne.title
+//        vc.post = PostModel(title: "new title2", author: "new autor2", description: "new description2", likes: 123, views: 234)
         navigationController?.pushViewController(vc, animated: true)
     }
 

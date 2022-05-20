@@ -16,7 +16,7 @@ class InfoViewController: UIViewController {
     }
     
     private func makeButton() {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
+        let button = UIButton(frame: CGRect(x: 100, y: 100, width: 200, height: 200))
         button.center = view.center
         button.setTitle("info", for: .normal)
         button.backgroundColor = .black

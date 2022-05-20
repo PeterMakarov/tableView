@@ -164,10 +164,10 @@ extension ProfileViewController: UITableViewDelegate {
     
     
 
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//
-//        guard section == 0 { return nil }
-//        return ProfileTableHederView()
-//    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+        guard section == 0 else { return nil }
+        return PhotosTableViewCell()
+    }
     
 }

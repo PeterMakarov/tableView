@@ -18,6 +18,7 @@ class ProfileViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.identifier)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.identifier)
         return tableView
     }()
@@ -53,13 +54,19 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return postModel.count
+        switch section {
+        case 0: return 1
+        default: return postModel.count
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: PhotosTableViewCell.identifier, for: indexPath) as! PhotosTableViewCell
+            return cell
         default:
-            let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier) as! CustomTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier, for: indexPath) as! CustomTableViewCell
             cell.setupCell(postModel[indexPath.section][indexPath.row])
             return cell
         }
@@ -71,13 +78,21 @@ extension ProfileViewController: UITableViewDataSource {
 extension ProfileViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        UITableView.automaticDimension
+        switch indexPath.section {
+        case 0: return 128.0
+        default: return UITableView.automaticDimension
+        }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailVC = PostViewController()
-        detailVC.setupVC(model: postModel[indexPath.section][indexPath.row])
-        navigationController?.pushViewController(detailVC, animated: true)
+        switch indexPath.section {
+        case 0:
+            print("Тут нужно сделать переход ")
+        default:
+            let detailVC = PostViewController()
+            detailVC.setupVC(model: postModel[indexPath.section][indexPath.row])
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

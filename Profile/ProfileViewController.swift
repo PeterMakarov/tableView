@@ -9,7 +9,8 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
-    private let postModel: [[PostModel]] = PostModel.makeSomePost()
+    
+    private let postModel = PostModel.makeSomePost()
     
     
     private lazy var tableView: UITableView = {
@@ -127,14 +128,17 @@ extension ProfileViewController: UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        {
+//        if indexPath.section == 0 {
+//            let cell = tableView.dequeueReusableCell(withIdentifier: PhotosTableViewCell.identifier, for: indexPath) as! PhotosTableViewCell
+//            cell.delegate = self
+//            return cell
+//    } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier) as! CustomTableViewCell
             
             cell.setupCell(postModel[indexPath.section][indexPath.row])
             
             return cell
-        }()
+//        }
     }
 }
 
@@ -143,7 +147,13 @@ extension ProfileViewController: UITableViewDataSource {
 
 extension ProfileViewController: UITableViewDelegate {
     
-    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            return PhotosTableViewCell()
+        } else {
+            return nil
+        }
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
@@ -159,15 +169,16 @@ extension ProfileViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 64.0
+        section == 0 ? 220 : 0
     }
-    
-    
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
-        guard section == 0 else { return nil }
-        return PhotosTableViewCell()
-    }
-    
 }
+
+//    MARK: - PhotosTableViewCellDelegate
+
+extension ProfileViewController: PhotosTableViewCellDelegate {
+    func buttonPressed() {
+        let detailVC = PhotosViewController()
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+

@@ -9,86 +9,82 @@ import UIKit
 
 class PhotosViewController: UIViewController {
 
-    private var photos: [UIImage] = {
-        var photos = [UIImage]()
+    private let photo = Photo.makePhoto()
 
-        for i in 1...20 {
-            let photo = UIImage(named: "\(i)")
-            photos.append(photo ?? UIImage(named: "cats")!)
-        }
-        return photos
+    private lazy var photoCollection: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        let photoCollection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        photoCollection.translatesAutoresizingMaskIntoConstraints = false
+        photoCollection.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
+        photoCollection.dataSource = self
+        photoCollection.delegate = self
+        return photoCollection
     }()
-
-    private let layoutCol: UICollectionViewFlowLayout = {
-        $0.scrollDirection = .vertical
-       return $0
-    }(UICollectionViewFlowLayout())
-
-    private lazy var collectionView: UICollectionView = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .systemBackground
-        $0.dataSource = self
-        $0.delegate = self
-        $0.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
-        return $0
-    }(UICollectionView(frame: .zero, collectionViewLayout: layoutCol))
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
+        title = "Photo Gallery"
         navigationController?.navigationBar.isHidden = false
-        navigationItem.title = "Photo Gallery"
         layout()
     }
-
-    private func layout(){
-        view.addSubview(collectionView)
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
+    }
+    
+    private func layout() {
+        view.addSubview(photoCollection)
+        
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            photoCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            photoCollection.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            photoCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            photoCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+    
 }
 
-
-// MARK: - UICollectionViewDataSource
+//MARK: - UICollectionViewDataSource
 
 extension PhotosViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        photos.count
+        photo.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
-
-        cell.setupCell(photos[indexPath.item])
-
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell;()
+        cell.addToCell(photo: photo[indexPath.row])
+        cell.backgroundColor = .systemGray4
+        cell.clipsToBounds = true
         return cell
     }
+    
 }
 
-// MARK: - UICollectionViewDelegateFlowLayout
+//MARK: - UICollectionViewDelegateFlowLayout
 
-extension PhotosViewController: UICollectionViewDelegateFlowLayout{
-
-    private var inset: CGFloat { return 8 }
+extension PhotosViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let width = (collectionView.bounds.width - inset * 4) / 3
+        let width = (view.bounds.width - 40) / 4
         return CGSize(width: width, height: width)
     }
-
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        8
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-
-        UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        inset
+        8
     }
+        
 }
-

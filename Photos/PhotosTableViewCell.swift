@@ -7,29 +7,24 @@
 
 import UIKit
 
+protocol PhotosTableViewCellDelegate: AnyObject {
+    func buttonPressed()
+}
+
 class PhotosTableViewCell: UITableViewCell {
     
-    weak var myCats: ProfileViewController?
-
-    private var photos: [UIImage] = {
-        var photos = [UIImage]()
-        
-        for i in 1...4 {
-            let photo = UIImage(named: "\(i)")
-            photos.append(photo ?? UIImage(named: "cats")!)
-        }
-        return photos
-    }()
+    weak var delegate: PhotosTableViewCellDelegate?
     
-    private let whiteView: UIView = {
-        let whiteView = UIView()
-        whiteView.translatesAutoresizingMaskIntoConstraints = false
-        whiteView.backgroundColor = .white
-        return whiteView
+    private let photo = Photo.makePhoto()
+    
+    private lazy var cellView: UIView = {
+        let cellView = UIView()
+        cellView.translatesAutoresizingMaskIntoConstraints = false
+        return cellView
     }()
     
     private let titlePhotos: UILabel = {
-       let titlePhotos = UILabel()
+        let titlePhotos = UILabel()
         titlePhotos.translatesAutoresizingMaskIntoConstraints = false
         titlePhotos.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         titlePhotos.textColor = .black
@@ -37,36 +32,38 @@ class PhotosTableViewCell: UITableViewCell {
         return titlePhotos
     }()
     
-    private let backLabel: UILabel = {
-        let backLabel = UILabel()
-        backLabel.translatesAutoresizingMaskIntoConstraints = false
-        backLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        backLabel.textColor = .black
-        backLabel.text = "->"
-        return backLabel
+    private let back: UILabel = {
+        let next = UILabel()
+        next.translatesAutoresizingMaskIntoConstraints = false
+        next.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        next.textColor = .black
+        next.text = "-->"
+        return next
     }()
     
-    private let layoutCollectionView: UICollectionViewFlowLayout = {
-        let layoutCollectionView = UICollectionViewFlowLayout()
-        layoutCollectionView.scrollDirection = .horizontal
-        return layoutCollectionView
-    }()
+//    private let nextButton: UIButton = {
+//        let nextButton = UIButton()
+//        nextButton.translatesAutoresizingMaskIntoConstraints = false
+////        arrow.turn.up.right
+//        nextButton.setBackgroundImage(UIImage(named: "arrow"), for: .normal)
+//        nextButton.addTarget(self, action: #selector(detailVCDelegate), for: .touchUpInside)
+//        return nextButton
+//    }()
     
     private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layoutCollectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .white
-        collectionView.isScrollEnabled = false
-        collectionView.isUserInteractionEnabled = false
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
-        return collectionView
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        let photoCollection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        photoCollection.translatesAutoresizingMaskIntoConstraints = false
+        photoCollection.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
+        photoCollection.dataSource = self
+        photoCollection.delegate = self
+        return photoCollection
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
         layout()
     }
     
@@ -74,31 +71,40 @@ class PhotosTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    @objc private func detailVCDelegate() {
+        delegate?.buttonPressed()
+    }
+    
     private func layout() {
-
-
-        [whiteView, titlePhotos, backLabel,  collectionView].forEach{contentView.addSubview($0)}
-
+        
+        contentView.addSubview(cellView)
+        
+        NSLayoutConstraint.activate([
+            cellView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cellView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            cellView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cellView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+        
+        
+        [titlePhotos, back, collectionView].forEach { cellView.addSubview($0) }
+        
         //let screenSize: CGRect = UIScreen.main.bounds
         let inset: CGFloat = 12
-
+        
         NSLayoutConstraint.activate([
-            whiteView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
-            whiteView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
-            whiteView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
-            whiteView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-
-            titlePhotos.topAnchor.constraint(equalTo: whiteView.topAnchor, constant: inset),
-            titlePhotos.leadingAnchor.constraint(equalTo: whiteView.leadingAnchor, constant: inset),
-
-            backLabel.topAnchor.constraint(equalTo: whiteView.topAnchor, constant: inset),
-            backLabel.trailingAnchor.constraint(equalTo: whiteView.trailingAnchor, constant: -inset),
-
+            
+            titlePhotos.topAnchor.constraint(equalTo: cellView.topAnchor, constant: inset),
+            titlePhotos.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: inset),
+            
+            back.topAnchor.constraint(equalTo: cellView.topAnchor, constant: inset),
+            back.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -inset),
+            
             collectionView.topAnchor.constraint(equalTo: titlePhotos.bottomAnchor, constant: inset),
-            collectionView.leadingAnchor.constraint(equalTo: whiteView.leadingAnchor, constant: 0),
-            collectionView.trailingAnchor.constraint(equalTo: whiteView.trailingAnchor, constant: 0),
-            collectionView.bottomAnchor.constraint(equalTo: whiteView.bottomAnchor, constant: -inset)
+            collectionView.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: inset),
+            collectionView.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -inset),
+            collectionView.bottomAnchor.constraint(equalTo: cellView.bottomAnchor, constant: -inset)
         ])
     }
 }
@@ -109,40 +115,30 @@ class PhotosTableViewCell: UITableViewCell {
 extension PhotosTableViewCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        4
+        photo.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
-
-        cell.setupCell(photos[indexPath.item])
-        
-        cell.myCats = self.myCats
-
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell;()
+        cell.addToCell(photo: photo[indexPath.row])
+        cell.layer.cornerRadius = 6
+        cell.backgroundColor = .systemGray4
+        cell.clipsToBounds = true
         return cell
     }
+    
 }
 
 
-// MARK: - UICollectionViewDelegate
+//MARK: - UICollectionViewDelegateFlowLayout
 
 extension PhotosTableViewCell: UICollectionViewDelegateFlowLayout {
 
-    private var inset: CGFloat { return 12 }
-
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let width = (collectionView.bounds.width - inset * 5) / 4
+        let width = (cellView.bounds.width - 48) / 4
         return CGSize(width: width, height: width)
     }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-
-        UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        8
-    }
 }
+
+
+

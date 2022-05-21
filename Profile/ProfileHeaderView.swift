@@ -8,9 +8,10 @@
 import UIKit
 
 class ProfileHeaderView: UIView {
-    
-    
-    private let status: UITextField = {
+
+    // MARK: - Private Properties
+
+    private lazy var statusTextField: UITextField = {
         let status = UITextField()
         status.placeholder = "Waiting for something..."
         status.textColor = UIColor.gray
@@ -20,10 +21,10 @@ class ProfileHeaderView: UIView {
         status.translatesAutoresizingMaskIntoConstraints = false
         return status
     }()
-    
-    private let showStatus: UIButton = {
+
+    private lazy var statusButton: UIButton = {
         let showStatus = UIButton()
-        showStatus.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        showStatus.addTarget(ProfileHeaderView.self, action: #selector(buttonPressed), for: .touchUpInside)
         showStatus.setTitle("Set status", for: .normal)
         showStatus.tintColor = UIColor.white
         showStatus.layer.cornerRadius = 4
@@ -34,24 +35,24 @@ class ProfileHeaderView: UIView {
         showStatus.translatesAutoresizingMaskIntoConstraints = false
         return showStatus
     }()
-    
-    private let heading: UILabel = {
+
+    private lazy var hearLabel: UILabel = {
         var heading = UILabel()
         heading.font = UIFont.boldSystemFont(ofSize: 18)
         heading.text = "Hipster cat"
         heading.translatesAutoresizingMaskIntoConstraints = false
         return heading
     }()
-    
-    private let profile: UILabel = {
+
+    private lazy var profileLabel: UILabel = {
         let profile = UILabel()
         profile.font = UIFont.boldSystemFont(ofSize: 18)
         profile.text = "Profile"
         profile.translatesAutoresizingMaskIntoConstraints = false
         return profile
     }()
-    
-    private let catView: UIImageView = {
+
+    private lazy var catImageView: UIImageView = {
         let catView = UIImageView()
         catView.image = UIImage(named: "cat")
         catView.layer.borderWidth = 3
@@ -62,59 +63,60 @@ class ProfileHeaderView: UIView {
         catView.translatesAutoresizingMaskIntoConstraints = false
         return catView
     }()
-    
+
+    // MARK: - IBActions
+
     @objc func statusTextChanged(_ textField: UITextField) {
-        restorationIdentifier = status.text
+        restorationIdentifier = statusTextField.text
     }
-    
+
     @objc func buttonPressed(sender: UIButton!) {
-        heading.text = status.text
-        print(heading.text ?? status.placeholder)
+        hearLabel.text = statusTextField.text
+        print(hearLabel.text ?? statusTextField.placeholder)
     }
-    
+
+    // MARK: - Initializers
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         viewProfile()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
-    
+
+    // MARK: - Public Methods
+
     func viewProfile() {
-        
         translatesAutoresizingMaskIntoConstraints = false
-        
-        [catView, heading, showStatus, status].forEach { addSubview($0) }
-        
+
+        [catImageView, hearLabel, statusButton, statusTextField].forEach { addSubview($0) }
+
         NSLayoutConstraint.activate([
-            catView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
-            catView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            catView.widthAnchor.constraint(equalToConstant: 100),
-            catView.heightAnchor.constraint(equalToConstant: 100)
+            catImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
+            catImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            catImageView.widthAnchor.constraint(equalToConstant: 100),
+            catImageView.heightAnchor.constraint(equalToConstant: 100)
         ])
-        
+
         NSLayoutConstraint.activate([
-            heading.topAnchor.constraint(equalTo: self.topAnchor, constant: 27),
-            heading.leadingAnchor.constraint(equalTo: catView.trailingAnchor, constant: 27)
+            hearLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 27),
+            hearLabel.leadingAnchor.constraint(equalTo: catImageView.trailingAnchor, constant: 27)
         ])
-        
+
         NSLayoutConstraint.activate([
-            showStatus.topAnchor.constraint(equalTo: catView.bottomAnchor, constant: 16),
-            showStatus.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            showStatus.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            showStatus.heightAnchor.constraint(equalToConstant: 50)
+            statusButton.topAnchor.constraint(equalTo: catImageView.bottomAnchor, constant: 16),
+            statusButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            statusButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            statusButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
+
         NSLayoutConstraint.activate([
-            status.bottomAnchor.constraint(equalTo: showStatus.topAnchor, constant: -34),
-            status.leadingAnchor.constraint(equalTo: catView.trailingAnchor, constant: 27),
-            status.heightAnchor.constraint(equalToConstant: 40),
-            status.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16)
+            statusTextField.bottomAnchor.constraint(equalTo: statusButton.topAnchor, constant: -34),
+            statusTextField.leadingAnchor.constraint(equalTo: catImageView.trailingAnchor, constant: 27),
+            statusTextField.heightAnchor.constraint(equalToConstant: 40),
+            statusTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16)
         ])
-        
     }
-    
 }

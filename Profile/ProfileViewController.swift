@@ -9,9 +9,7 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
-    
     private let postModel = PostModel.makeSomePost()
-    
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -109,8 +107,6 @@ class ProfileViewController: UIViewController {
             workingScreen.heightAnchor.constraint(equalToConstant: 220)
         ])
     }
-
-
 }
 
 //     MARK: - UITableViewDataSource
@@ -128,20 +124,19 @@ extension ProfileViewController: UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        if indexPath.section == 0 {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: PhotosTableViewCell.identifier, for: indexPath) as! PhotosTableViewCell
-//            cell.delegate = self
-//            return cell
-//    } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier) as! CustomTableViewCell
-            
-            cell.setupCell(postModel[indexPath.section][indexPath.row])
-            
-            return cell
-//        }
+        //        if indexPath.section == 0 {
+        //            let cell = tableView.dequeueReusableCell(withIdentifier: PhotosTableViewCell.identifier, for: indexPath) as! PhotosTableViewCell
+        //            cell.delegate = self
+        //            return cell
+        //    } else {
+        let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier) as! CustomTableViewCell
+        
+        cell.setupCell(postModel[indexPath.section][indexPath.row])
+        
+        return cell
+        //        }
     }
 }
-
 
 //    MARK: - UItableViewDalegate
 
@@ -161,6 +156,12 @@ extension ProfileViewController: UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        //        if indexPath.section == 0 {
+        //            let photosVC = PhotosViewController()
+        //            navigationController?.pushViewController(photosVC, animated: true)
+        //
+        //        } else {
         
         let detailVC = PostViewController()
         detailVC.setupVC(model: postModel[indexPath.section][indexPath.row])

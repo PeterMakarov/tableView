@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol PhotosTableViewCellDelegate: AnyObject {
-    func buttonPressed()
-}
-
 class PhotosTableViewCell: UITableViewCell {
     
     weak var delegate: PhotosTableViewCellDelegate?
@@ -32,23 +28,23 @@ class PhotosTableViewCell: UITableViewCell {
         return titlePhotos
     }()
     
-    private let back: UILabel = {
-        let next = UILabel()
-        next.translatesAutoresizingMaskIntoConstraints = false
-        next.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        next.textColor = .black
-        next.text = "-->"
-        return next
-    }()
-    
-//    private let nextButton: UIButton = {
-//        let nextButton = UIButton()
-//        nextButton.translatesAutoresizingMaskIntoConstraints = false
-////        arrow.turn.up.right
-//        nextButton.setBackgroundImage(UIImage(named: "arrow"), for: .normal)
-//        nextButton.addTarget(self, action: #selector(detailVCDelegate), for: .touchUpInside)
-//        return nextButton
+//    private let back: UILabel = {
+//        let next = UILabel()
+//        next.translatesAutoresizingMaskIntoConstraints = false
+//        next.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+//        next.textColor = .black
+//        next.text = "-->"
+//        return next
 //    }()
+    
+    private let nextButton: UIButton = {
+        let nextButton = UIButton()
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+//        arrow.turn.up.right
+        nextButton.setBackgroundImage(UIImage(systemName: "arrow.turn.up.right"), for: .normal)
+        nextButton.addTarget(self, action: #selector(detailVCDelegate), for: .touchUpInside)
+        return nextButton
+    }()
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -88,7 +84,7 @@ class PhotosTableViewCell: UITableViewCell {
         ])
         
         
-        [titlePhotos, back, collectionView].forEach { cellView.addSubview($0) }
+        [titlePhotos, nextButton, collectionView].forEach { cellView.addSubview($0) }
         
         //let screenSize: CGRect = UIScreen.main.bounds
         let inset: CGFloat = 12
@@ -98,8 +94,9 @@ class PhotosTableViewCell: UITableViewCell {
             titlePhotos.topAnchor.constraint(equalTo: cellView.topAnchor, constant: inset),
             titlePhotos.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: inset),
             
-            back.topAnchor.constraint(equalTo: cellView.topAnchor, constant: inset),
-            back.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -inset),
+            nextButton.topAnchor.constraint(equalTo: cellView.topAnchor, constant: inset),
+            nextButton.centerYAnchor.constraint(equalTo: titlePhotos.centerYAnchor),
+            nextButton.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -inset),
             
             collectionView.topAnchor.constraint(equalTo: titlePhotos.bottomAnchor, constant: inset),
             collectionView.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: inset),
@@ -138,6 +135,11 @@ extension PhotosTableViewCell: UICollectionViewDelegateFlowLayout {
         let width = (cellView.bounds.width - 48) / 4
         return CGSize(width: width, height: width)
     }
+}
+
+
+protocol PhotosTableViewCellDelegate: AnyObject {
+    func buttonPressed()
 }
 
 

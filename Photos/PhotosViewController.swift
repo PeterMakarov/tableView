@@ -13,7 +13,7 @@ class PhotosViewController: UIViewController {
 
     private lazy var photoCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         
         let photoCollection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         photoCollection.translatesAutoresizingMaskIntoConstraints = false
@@ -25,15 +25,15 @@ class PhotosViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+//        view.backgroundColor = .white
         title = "Photo Gallery"
-        navigationController?.navigationBar.isHidden = false
+//        navigationController?.navigationBar.isHidden = false
         layout()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.navigationBar.isHidden = true
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        navigationController?.navigationBar.isHidden = true
+//    }
     
     private func layout() {
         view.addSubview(photoCollection)
@@ -57,7 +57,7 @@ extension PhotosViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell;()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
         cell.addToCell(photo: photo[indexPath.row])
         cell.backgroundColor = .systemGray4
         cell.clipsToBounds = true

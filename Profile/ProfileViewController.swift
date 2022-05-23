@@ -25,7 +25,6 @@ class ProfileViewController: UIViewController {
     
     private lazy var profileHeaderView: UIView = {
         let profileView = ProfileHeaderView()
-        profileView.translatesAutoresizingMaskIntoConstraints = false
         profileView.backgroundColor = .lightGray
         return profileView
     }()

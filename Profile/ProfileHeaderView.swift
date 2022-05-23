@@ -19,12 +19,13 @@ class ProfileHeaderView: UIView {
         status.layer.cornerRadius = 10
         status.font = UIFont.boldSystemFont(ofSize: 14)
         status.translatesAutoresizingMaskIntoConstraints = false
+        status.addTarget(self, action: #selector(statusTextFieldValueChanged(_:)), for: .valueChanged)
         return status
     }()
 
     private lazy var statusButton: UIButton = {
         let showStatus = UIButton()
-        showStatus.addTarget(ProfileHeaderView.self, action: #selector(buttonPressed), for: .touchUpInside)
+        showStatus.addTarget(self, action: #selector(statusButtonTapped(_:)), for: .touchUpInside)
         showStatus.setTitle("Set status", for: .normal)
         showStatus.tintColor = UIColor.white
         showStatus.layer.cornerRadius = 4
@@ -66,11 +67,11 @@ class ProfileHeaderView: UIView {
 
     // MARK: - IBActions
 
-    @objc func statusTextChanged(_ textField: UITextField) {
-        restorationIdentifier = statusTextField.text
+    @IBAction private func statusTextFieldValueChanged(_ sender: UITextField) {
+        restorationIdentifier = sender.text
     }
 
-    @objc func buttonPressed(sender: UIButton!) {
+    @IBAction private func statusButtonTapped(_ sender: UIButton) {
         hearLabel.text = statusTextField.text
         print(hearLabel.text ?? statusTextField.placeholder)
     }
@@ -89,7 +90,6 @@ class ProfileHeaderView: UIView {
     // MARK: - Public Methods
 
     func viewProfile() {
-        
 
         [catImageView, hearLabel, statusButton, statusTextField].forEach { addSubview($0) }
 

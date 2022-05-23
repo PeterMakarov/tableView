@@ -40,5 +40,5 @@ class PhotosCollectionViewCell: UICollectionViewCell {
         photoCell.image = photo.image
     }
 }
-    
+
 

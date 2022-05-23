@@ -73,7 +73,7 @@ class LogInViewController: UIViewController {
     private let dividingStrip: UIView = {
         let dividingStrip = UIView()
         dividingStrip.backgroundColor = .lightGray
-       return dividingStrip
+        return dividingStrip
     }()
     
     

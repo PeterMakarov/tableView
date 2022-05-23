@@ -60,16 +60,6 @@ class PostViewController: UIViewController {
         $0.numberOfLines = 0
         return $0
     }(UILabel())
-    
-//    private lazy var textField: UITextField = {
-//        let textField = UITextField()
-//        textField.borderStyle = .roundedRect
-//        textField.translatesAutoresizingMaskIntoConstraints = false
-//        textField.placeholder = "Введите текст"
-//        textField.delegate = self
-//        textField.isSecureTextEntry = true
-//        return textField
-//    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,9 +97,6 @@ class PostViewController: UIViewController {
         textLabel.text = model.description
         likes.text = "Likes: \(model.likes)"
         views.text = "Views: \(model.views)"
-        
-//        guard let text = model.title else { return }
-//        textLabel.text = title + title
     }
     
     private func layout() {
@@ -167,15 +154,6 @@ class PostViewController: UIViewController {
             views.heightAnchor.constraint(equalToConstant: 50),
             views.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
-        
-//        NSLayoutConstraint.activate([
-//            textField.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 16),
-//            textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-//            textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-//            textField.heightAnchor.constraint(equalToConstant: 40),
-//            /// Обязательно закрепиться к низу  contentView !!!!
-//            textField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-//        ])
     }
 }
 
@@ -187,89 +165,3 @@ extension PostViewController: UITextFieldDelegate {
         return true
     }
 }
-    
-//    var post = PostModel(title: "go go", author: "It's me", description: "VP", likes: 241, views: 321)
-//
-//    private var tableView: UITableView = {
-//       let tableView = UITableView()
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
-//        tableView.backgroundColor = .red
-////        tableView.dataSource = self
-////        tableView.delegate = self
-//        tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
-//        return tableView
-//    }()
-////
-////    convenience init(post: PostModel){
-////        self.init()
-////        self.post = post
-////    }
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        navigationController?.navigationBar.isHidden = false
-//
-//        view.backgroundColor = .yellow
-////        navigationItem.title = post.title
-//        layout()
-//        makeBarItem()
-//    }
-//
-//    private func makeBarItem() {
-//        let barItem = UIBarButtonItem(title: "Info", style: .plain, target: self, action: #selector(tapAction))
-//        navigationItem.rightBarButtonItem = barItem
-//        barItem.tintColor = .black
-//    }
-//
-//    @objc private func tapAction() {
-//        let vc = PostViewController()
-//        vc.post = PostModel(title: "New title", author: "New autor", description: "New description", likes: 345, views: 435)
-//        vc.title = "Information"
-//        navigationController?.pushViewController(vc, animated: true)
-//    }
-//
-//
-//    private func layout() {
-//
-//        view.addSubview(tableView)
-//
-//        NSLayoutConstraint.activate([
-//            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-//            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-//        ])
-//    }
-//
-//}
-//
-//// MARK: - UITableViewDataSource
-//
-//extension PostViewController: UITableViewDataSource {
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 1
-//    }
-//
-//
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//
-//        let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifier, for: indexPath) as! PostTableViewCell
-//
-//        cell.setupCell(post)
-//        cell.selectionStyle = .none
-//
-//        return cell
-//    }
-//}
-//
-////  MARK: - UITableViewDelegate
-//
-//extension PostViewController: UITableViewDelegate {
-//
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        UITableView.automaticDimension
-//    }
-//}

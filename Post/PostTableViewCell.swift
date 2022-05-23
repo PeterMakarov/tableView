@@ -44,7 +44,7 @@ class PostTableViewCell: UITableViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.axis = .horizontal
         $0.distribution = .equalSpacing
-       return $0
+        return $0
     }(UIStackView())
     
     private let likesPost: UILabel = {
@@ -60,7 +60,7 @@ class PostTableViewCell: UITableViewCell {
         $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         return $0
     }(UILabel())
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .systemBackground

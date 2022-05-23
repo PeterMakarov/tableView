@@ -8,9 +8,9 @@
 import UIKit
 
 class ProfileHeaderView: UIView {
-
+    
     // MARK: - Private Properties
-
+    
     private lazy var statusTextField: UITextField = {
         let status = UITextField()
         status.placeholder = "Waiting for something..."
@@ -22,10 +22,10 @@ class ProfileHeaderView: UIView {
         status.addTarget(self, action: #selector(statusTextFieldValueChanged(_:)), for: .valueChanged)
         return status
     }()
-
+    
     private lazy var statusButton: UIButton = {
         let showStatus = UIButton()
-        showStatus.addTarget(self, action: #selector(statusButtonTapped(_:)), for: .touchUpInside)
+        showStatus.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         showStatus.setTitle("Set status", for: .normal)
         showStatus.tintColor = UIColor.white
         showStatus.layer.cornerRadius = 4
@@ -36,7 +36,7 @@ class ProfileHeaderView: UIView {
         showStatus.translatesAutoresizingMaskIntoConstraints = false
         return showStatus
     }()
-
+    
     private lazy var hearLabel: UILabel = {
         var heading = UILabel()
         heading.font = UIFont.boldSystemFont(ofSize: 18)
@@ -44,7 +44,7 @@ class ProfileHeaderView: UIView {
         heading.translatesAutoresizingMaskIntoConstraints = false
         return heading
     }()
-
+    
     private lazy var profileLabel: UILabel = {
         let profile = UILabel()
         profile.font = UIFont.boldSystemFont(ofSize: 18)
@@ -52,65 +52,194 @@ class ProfileHeaderView: UIView {
         profile.translatesAutoresizingMaskIntoConstraints = false
         return profile
     }()
-
+    
     private lazy var catImageView: UIImageView = {
-        let catView = UIImageView()
-        catView.image = UIImage(named: "cat")
-        catView.layer.borderWidth = 3
-        catView.layer.borderColor = UIColor(red: 255, green: 255, blue: 255, alpha: 1).cgColor
-        catView.layer.cornerRadius = 50
-        catView.contentMode = .scaleAspectFill
-        catView.clipsToBounds = true
-        catView.translatesAutoresizingMaskIntoConstraints = false
-        return catView
+        let catImageView = UIImageView()
+        catImageView.image = UIImage(named: "cat")
+        catImageView.layer.borderWidth = 3
+        catImageView.layer.borderColor = UIColor.white.cgColor
+        catImageView.layer.cornerRadius = 50
+        catImageView.contentMode = .scaleAspectFill
+        catImageView.isUserInteractionEnabled = true
+        catImageView.clipsToBounds = true
+        catImageView.translatesAutoresizingMaskIntoConstraints = false
+        return catImageView
     }()
-
-    // MARK: - IBActions
-
-    @IBAction private func statusTextFieldValueChanged(_ sender: UITextField) {
-        restorationIdentifier = sender.text
+    
+    private let whiteView: UIView = {
+        let whiteView = UIView()
+        whiteView.translatesAutoresizingMaskIntoConstraints = false
+        return whiteView
+    }()
+    
+    private let mainView: UIView = {
+        let mainView = UIView()
+        mainView.translatesAutoresizingMaskIntoConstraints = false
+        return mainView
+    }()
+    
+    private var topCatImageView = NSLayoutConstraint()
+    private var leadingCatImageView = NSLayoutConstraint()
+    private var widthCatImageView = NSLayoutConstraint()
+    private var heightCatImageView = NSLayoutConstraint()
+    private var catViewY = CGFloat()
+    private var catViewX = CGFloat()
+    
+    private lazy var blackView: UIView = {
+        blackView = UIView()
+        blackView.backgroundColor = .black
+        blackView.isHidden = true
+        blackView.alpha = 0.7
+        return blackView
+    }()
+    
+    private lazy var closeAnimationButton : UIButton = {
+        let closeAnimationButton = UIButton()
+        closeAnimationButton.translatesAutoresizingMaskIntoConstraints = false
+        closeAnimationButton.setBackgroundImage(UIImage(systemName: "xmark"), for: .normal)
+        closeAnimationButton.addTarget(self, action: #selector(closeAction), for: .touchUpInside)
+        return closeAnimationButton
+    }()
+    
+    private func setupGestures() {
+        let setupGestures = UITapGestureRecognizer(target: self, action: #selector(tapInCat))
+        catImageView.addGestureRecognizer(setupGestures)
     }
-
-    @IBAction private func statusButtonTapped(_ sender: UIButton) {
+    
+    // MARK: - IBActions
+    
+    @objc func statusTextFieldValueChanged(_ sender: UITextField) {
+        restorationIdentifier = statusTextField.text
+    }
+    
+    @objc func buttonPressed(_ sender: UIButton!) {
         hearLabel.text = statusTextField.text
         print(hearLabel.text ?? statusTextField.placeholder)
     }
-
+    
+    
+    
     // MARK: - Initializers
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        isUserInteractionEnabled = true
+        
         viewProfile()
+        setupGestures()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     // MARK: - Public Methods
-
+    
     func viewProfile() {
-
-        [catImageView, hearLabel, statusButton, statusTextField].forEach { addSubview($0) }
-
+        
+        addSubview(whiteView)
+        
+        [catImageView, hearLabel, statusButton, statusTextField, blackView, mainView].forEach {whiteView.addSubview($0)}
+        
+        
+        blackView.addSubview(closeAnimationButton)
+        
+        
+        leadingCatImageView = catImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16)
+        topCatImageView = catImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16)
+        widthCatImageView = catImageView.widthAnchor.constraint(equalToConstant: 100)
+        heightCatImageView = catImageView.heightAnchor.constraint(equalToConstant: 100)
+        
         NSLayoutConstraint.activate([
-            catImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
-            catImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            catImageView.widthAnchor.constraint(equalToConstant: 100),
-            catImageView.heightAnchor.constraint(equalToConstant: 100),
-       
+            
+            whiteView.topAnchor.constraint(equalTo: self.topAnchor),
+            whiteView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            whiteView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            whiteView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
+            topCatImageView,
+            leadingCatImageView,
+            widthCatImageView,
+            heightCatImageView,
+            
             hearLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 27),
-            hearLabel.leadingAnchor.constraint(equalTo: catImageView.trailingAnchor, constant: 27),
-
-            statusButton.topAnchor.constraint(equalTo: catImageView.bottomAnchor, constant: 16),
+            hearLabel.leadingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: 27),
+            
+            mainView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            mainView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
+            mainView.widthAnchor.constraint(equalToConstant: 100),
+            mainView.heightAnchor.constraint(equalToConstant: 100),
+            
+            statusButton.topAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 16),
             statusButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             statusButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            statusButton.widthAnchor.constraint(equalToConstant: 380),
             statusButton.heightAnchor.constraint(equalToConstant: 50),
-
+            
+            blackView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
+            blackView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height),
+            
+            closeAnimationButton.topAnchor.constraint(equalTo: blackView.topAnchor),
+            closeAnimationButton.trailingAnchor.constraint(equalTo: blackView.trailingAnchor),
+            
             statusTextField.bottomAnchor.constraint(equalTo: statusButton.topAnchor, constant: -34),
-            statusTextField.leadingAnchor.constraint(equalTo: catImageView.trailingAnchor, constant: 27),
+            statusTextField.leadingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: 27),
             statusTextField.heightAnchor.constraint(equalToConstant: 40),
             statusTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16)
         ])
+    }
+    
+    @objc func tapInCat() {
+        catViewY = self.catImageView.center.y
+        catViewX = self.catImageView.center.x
+        
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.1,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0.3,
+            options: .curveEaseInOut) {
+                
+                self.blackView.isHidden = false
+                
+                self.topCatImageView.constant = self.closeAnimationButton.bounds.height
+                self.leadingCatImageView.isActive = false
+                self.widthCatImageView.constant = UIScreen.main.bounds.width
+                self.heightCatImageView.constant = UIScreen.main.bounds.width
+                self.catImageView.layer.cornerRadius = 0
+                self.layoutIfNeeded()
+                
+            } completion: { _ in
+                UIView.animate(withDuration: 1.0,
+                               delay: 0.0) {
+                    self.catImageView.layer.cornerRadius = 0
+                    //                } completion: { _ in
+                    //                    UIView.animate(withDuration: 0.3,
+                    //                                   delay: 0.0) {
+                    //                        self.blackView.alpha = 1
+                    //              }
+                    
+                }
+            }
+        print("Есть нажатие")
+    }
+    
+    @objc func closeAction(){
+        
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.1,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0.3,
+            options: .curveEaseInOut) {
+                self.catImageView.center = CGPoint(x: self.catViewX, y: self.catViewY)
+                self.topCatImageView.constant = self.bounds.minY + 16
+                self.leadingCatImageView.isActive = true
+                self.widthCatImageView.constant = 100
+                self.heightCatImageView.constant = 100
+                self.blackView.isHidden = true
+                self.layoutIfNeeded()
+                self.catImageView.layer.cornerRadius = self.catImageView.bounds.width / 2
+            }
     }
 }

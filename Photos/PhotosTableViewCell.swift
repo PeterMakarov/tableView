@@ -10,16 +10,8 @@ import UIKit
 class PhotosTableViewCell: UITableViewCell {
     
     weak var myCats: ProfileViewController?
-
-    private var photos: [UIImage] = {
-        var photos = [UIImage]()
-        
-        for i in 1...4 {
-            let photo = UIImage(named: "\(i)")
-            photos.append(photo ?? UIImage(named: "cats")!)
-        }
-        return photos
-    }()
+    
+    private let photos = Photo.makePhoto()
     
     private let whiteView: UIView = {
         let whiteView = UIView()
@@ -46,21 +38,17 @@ class PhotosTableViewCell: UITableViewCell {
         return backLabel
     }()
     
-    private let layoutCollectionView: UICollectionViewFlowLayout = {
+    private lazy var collectionView: UICollectionView = {
         let layoutCollectionView = UICollectionViewFlowLayout()
         layoutCollectionView.scrollDirection = .horizontal
-        return layoutCollectionView
-    }()
-    
-    private lazy var collectionView: UICollectionView = {
+        layoutCollectionView.collectionView?.layer.cornerRadius = 6
+        
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layoutCollectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .white
-        collectionView.isScrollEnabled = false
-        collectionView.isUserInteractionEnabled = false
+        collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
         return collectionView
     }()
     
@@ -76,9 +64,18 @@ class PhotosTableViewCell: UITableViewCell {
     }
 
     private func layout() {
+        
+        contentView.addSubview(whiteView)
+        
+        NSLayoutConstraint.activate([
+            whiteView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
+            whiteView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+            whiteView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
+            whiteView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
+        ])
 
 
-        [whiteView, titlePhotos, backLabel,  collectionView].forEach{contentView.addSubview($0)}
+        [titlePhotos, backLabel,  collectionView].forEach{whiteView.addSubview($0)}
 
         //let screenSize: CGRect = UIScreen.main.bounds
         let inset: CGFloat = 12
@@ -93,6 +90,7 @@ class PhotosTableViewCell: UITableViewCell {
             titlePhotos.leadingAnchor.constraint(equalTo: whiteView.leadingAnchor, constant: inset),
 
             backLabel.topAnchor.constraint(equalTo: whiteView.topAnchor, constant: inset),
+            backLabel.centerYAnchor.constraint(equalTo: titlePhotos.centerYAnchor),
             backLabel.trailingAnchor.constraint(equalTo: whiteView.trailingAnchor, constant: -inset),
 
             collectionView.topAnchor.constraint(equalTo: titlePhotos.bottomAnchor, constant: inset),
@@ -107,19 +105,18 @@ class PhotosTableViewCell: UITableViewCell {
 
 
 extension PhotosTableViewCell: UICollectionViewDataSource {
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        4
+        photos.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
-
-        cell.setupCell(photos[indexPath.item])
-        
-        cell.myCats = self.myCats
-
+        cell.setupCell(photo: photos[indexPath.row])
+        cell.layer.cornerRadius = 6
+        cell.backgroundColor = .systemGray4
+        cell.clipsToBounds = true
         return cell
     }
 }

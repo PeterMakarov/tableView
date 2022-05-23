@@ -8,16 +8,18 @@
 import UIKit
 
 class PhotosViewController: UIViewController {
+    
+    private let photos = Photo.makePhoto()
 
-    private var photos: [UIImage] = {
-        var photos = [UIImage]()
-
-        for i in 1...20 {
-            let photo = UIImage(named: "\(i)")
-            photos.append(photo ?? UIImage(named: "cats")!)
-        }
-        return photos
-    }()
+//    private var photos: [UIImage] = {
+//        var photos = [UIImage]()
+//
+//        for i in 1...20 {
+//            let photo = UIImage(named: "\(i)")
+//            photos.append(photo ?? UIImage(named: "cats")!)
+//        }
+//        return photos
+//    }()
 
     private let layoutCol: UICollectionViewFlowLayout = {
         $0.scrollDirection = .vertical
@@ -64,7 +66,7 @@ extension PhotosViewController: UICollectionViewDataSource {
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
 
-        cell.setupCell(photos[indexPath.item])
+        cell.setupCell(photo: photos[indexPath.row])
 
         return cell
     }

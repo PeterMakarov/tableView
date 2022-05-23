@@ -89,7 +89,7 @@ class ProfileHeaderView: UIView {
     // MARK: - Public Methods
 
     func viewProfile() {
-        translatesAutoresizingMaskIntoConstraints = false
+        
 
         [catImageView, hearLabel, statusButton, statusTextField].forEach { addSubview($0) }
 
@@ -97,22 +97,16 @@ class ProfileHeaderView: UIView {
             catImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
             catImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             catImageView.widthAnchor.constraint(equalToConstant: 100),
-            catImageView.heightAnchor.constraint(equalToConstant: 100)
-        ])
-
-        NSLayoutConstraint.activate([
+            catImageView.heightAnchor.constraint(equalToConstant: 100),
+       
             hearLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 27),
-            hearLabel.leadingAnchor.constraint(equalTo: catImageView.trailingAnchor, constant: 27)
-        ])
+            hearLabel.leadingAnchor.constraint(equalTo: catImageView.trailingAnchor, constant: 27),
 
-        NSLayoutConstraint.activate([
             statusButton.topAnchor.constraint(equalTo: catImageView.bottomAnchor, constant: 16),
             statusButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             statusButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            statusButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
+            statusButton.heightAnchor.constraint(equalToConstant: 50),
 
-        NSLayoutConstraint.activate([
             statusTextField.bottomAnchor.constraint(equalTo: statusButton.topAnchor, constant: -34),
             statusTextField.leadingAnchor.constraint(equalTo: catImageView.trailingAnchor, constant: 27),
             statusTextField.heightAnchor.constraint(equalToConstant: 40),

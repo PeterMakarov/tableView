@@ -53,7 +53,7 @@ class ProfileHeaderView: UIView {
         return profile
     }()
     
-    private lazy var catImageView: UIImageView = {
+    private var catImageView: UIImageView = {
         let catImageView = UIImageView()
         catImageView.image = UIImage(named: "cat")
         catImageView.layer.borderWidth = 3
@@ -85,17 +85,18 @@ class ProfileHeaderView: UIView {
     private var catViewY = CGFloat()
     private var catViewX = CGFloat()
     
-    private lazy var blackView: UIView = {
-        blackView = UIView()
-        blackView.backgroundColor = .black
-        blackView.isHidden = true
-        blackView.alpha = 0.7
-        return blackView
-    }()
+    private let blackView: UIView = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .black
+        $0.isHidden = true
+        $0.alpha = 0.9
+        return $0
+    }(UIView())
     
-    private lazy var closeAnimationButton : UIButton = {
+    private var closeAnimationButton : UIButton = {
         let closeAnimationButton = UIButton()
         closeAnimationButton.translatesAutoresizingMaskIntoConstraints = false
+        closeAnimationButton.isHidden = true
         closeAnimationButton.setBackgroundImage(UIImage(systemName: "xmark"), for: .normal)
         closeAnimationButton.addTarget(self, action: #selector(closeAction), for: .touchUpInside)
         return closeAnimationButton
@@ -113,8 +114,12 @@ class ProfileHeaderView: UIView {
     }
     
     @objc func buttonPressed(_ sender: UIButton!) {
+        if statusTextField.text?.count == 0 {
+            hearLabel.text = "Введите статус"
+        } else {
         hearLabel.text = statusTextField.text
         print(hearLabel.text ?? statusTextField.placeholder)
+    }
     }
     
     
@@ -139,7 +144,7 @@ class ProfileHeaderView: UIView {
         
         addSubview(whiteView)
         
-        [catImageView, hearLabel, statusButton, statusTextField, blackView, mainView].forEach {whiteView.addSubview($0)}
+        [hearLabel, statusButton, statusTextField, blackView, mainView, catImageView].forEach {whiteView.addSubview($0)}
         
         
         blackView.addSubview(closeAnimationButton)
@@ -189,9 +194,10 @@ class ProfileHeaderView: UIView {
         ])
     }
     
-    @objc func tapInCat() {
+    @objc private func tapInCat() {
         catViewY = self.catImageView.center.y
         catViewX = self.catImageView.center.x
+        
         
         UIView.animate(
             withDuration: 0.5,
@@ -202,29 +208,23 @@ class ProfileHeaderView: UIView {
                 
                 self.blackView.isHidden = false
                 
-                self.topCatImageView.constant = self.closeAnimationButton.bounds.height
+                self.topCatImageView.constant = UIScreen.main.bounds.midY / 3
                 self.leadingCatImageView.isActive = false
                 self.widthCatImageView.constant = UIScreen.main.bounds.width
                 self.heightCatImageView.constant = UIScreen.main.bounds.width
-                self.catImageView.layer.cornerRadius = 0
                 self.layoutIfNeeded()
                 
             } completion: { _ in
                 UIView.animate(withDuration: 1.0,
-                               delay: 0.0) {
+                               delay: 0.3) {
+                    self.closeAnimationButton.isHidden = false
                     self.catImageView.layer.cornerRadius = 0
-                    //                } completion: { _ in
-                    //                    UIView.animate(withDuration: 0.3,
-                    //                                   delay: 0.0) {
-                    //                        self.blackView.alpha = 1
-                    //              }
                     
                 }
             }
-        print("Есть нажатие")
     }
     
-    @objc func closeAction(){
+    @objc private func closeAction(){
         
         UIView.animate(
             withDuration: 0.5,
@@ -232,6 +232,7 @@ class ProfileHeaderView: UIView {
             usingSpringWithDamping: 1,
             initialSpringVelocity: 0.3,
             options: .curveEaseInOut) {
+                self.closeAnimationButton.isHidden = true
                 self.catImageView.center = CGPoint(x: self.catViewX, y: self.catViewY)
                 self.topCatImageView.constant = self.bounds.minY + 16
                 self.leadingCatImageView.isActive = true

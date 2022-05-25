@@ -11,19 +11,19 @@ class PostViewController: UIViewController {
     
     private let nc = NotificationCenter.default
     
-    private let scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
     
-    private let contentView: UIView = {
+    private lazy var contentView: UIView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .white
         return $0
     }(UIView())
     
-    let nameLabel: UILabel = {
+    private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .bold)
         label.textColor = .black
@@ -32,34 +32,52 @@ class PostViewController: UIViewController {
         return label
     }()
     
-    let ImageView: UIImageView = {
+    private lazy var ImageView: UIImageView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
     }(UIImageView())
     
-    let likes: UILabel = {
+    private lazy var likes: UILabel = {
        let likes = UILabel()
         likes.translatesAutoresizingMaskIntoConstraints = false
         likes.font = .systemFont(ofSize: 16, weight: .medium)
+        likes.alpha = 1
+        likes.isUserInteractionEnabled = true
         likes.textColor = .black
         return likes
     }()
     
-    let views: UILabel = {
+    private lazy var views: UILabel = {
        let views = UILabel()
         views.translatesAutoresizingMaskIntoConstraints = false
         views.font = .systemFont(ofSize: 16, weight: .medium)
+        views.alpha = 1
+        views.isUserInteractionEnabled = true
         views.textColor = .black
         return views
     }()
     
-    private let textLabel: UILabel = {
+    private lazy var textLabel: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = .systemGray
         $0.font = .systemFont(ofSize: 24)
         $0.numberOfLines = 0
         return $0
     }(UILabel())
+    
+    private func setupGestures() {
+        let setupGestures = UITapGestureRecognizer(target: self, action: #selector(click))
+        likes.addGestureRecognizer(setupGestures)
+   
+//        let setupGesturesView = UITapGestureRecognizer(target: self, action: #selector(viewing))
+//        postView.addGestureRecognizer(setupGesturesView)
+    }
+    
+    @objc private func click() {
+        let strLike = likes.text
+        let intLike = String(strLike!.dropFirst(6))
+        likes.text = "Likes:\((Int(intLike) ?? 0) + 1)"
+        }
 
     override func viewDidLoad() {
         super.viewDidLoad()

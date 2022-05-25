@@ -113,7 +113,7 @@ extension PhotosTableViewCell: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
         cell.setupCell(photo: photos[indexPath.row])
         cell.layer.cornerRadius = 6
-        cell.backgroundColor = .systemGray4
+        cell.backgroundColor = .white
         cell.clipsToBounds = true
         return cell
     }

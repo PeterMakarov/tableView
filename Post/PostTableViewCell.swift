@@ -9,6 +9,7 @@ import UIKit
 
 class PostTableViewCell: UITableViewCell {
     
+    
     private let whiteView: UIView = {
         let whiteView = UIView()
         whiteView.translatesAutoresizingMaskIntoConstraints = false
@@ -47,14 +48,14 @@ class PostTableViewCell: UITableViewCell {
         return $0
     }(UIStackView())
     
-    private let likesPost: UILabel = {
+    private var likesPost: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = .black
         $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         return $0
     }(UILabel())
     
-    private let viewsPost: UILabel = {
+    private var viewsPost: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = .black
         $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)

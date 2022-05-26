@@ -11,9 +11,14 @@ protocol CustomPostTableleCellDelegate: AnyObject {
     func liked(like: UILabel, cell: CustomTableViewCell)
 }
 
+protocol PostViewControllerDelegate: AnyObject {
+    func viewing(views: UILabel, cell: CustomTableViewCell)
+}
+
 class CustomTableViewCell: UITableViewCell {
     
     weak var delegate: CustomPostTableleCellDelegate?
+    weak var delegateView: PostViewControllerDelegate?
     
     private let whiteView: UIView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -25,6 +30,7 @@ class CustomTableViewCell: UITableViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .black
         $0.contentMode = .scaleAspectFit
+        $0.isUserInteractionEnabled = true
         return $0
     }(UIImageView())
     
@@ -41,20 +47,6 @@ class CustomTableViewCell: UITableViewCell {
         $0.numberOfLines = 3
         return $0
     }(UILabel())
-    
-//    private let likesButton: UIButton = {
-//        $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.addTarget(self, action: #selector(liked), for: .touchUpInside)
-//        $0.alpha = 0
-//        return $0
-//    }(UIButton())
-//
-//    private let viewButton: UIButton = {
-//        $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.addTarget(self, action: #selector(viewing), for: .touchUpInside)
-//        $0.alpha = 0
-//        return $0
-//    }(UIButton())
     
     private var likes: UILabel = {
         let likes = UILabel()
@@ -79,37 +71,33 @@ class CustomTableViewCell: UITableViewCell {
     private func setupGestures() {
         let setupGestures = UITapGestureRecognizer(target: self, action: #selector(liked))
         likes.addGestureRecognizer(setupGestures)
-   
+        
         let setupGesturesView = UITapGestureRecognizer(target: self, action: #selector(viewing))
         postView.addGestureRecognizer(setupGesturesView)
     }
     
-    @objc func liked(_ sender: UITapGestureRecognizer) {
-        var strLike = likes.text
-        var intLike = String(strLike!.dropFirst(6))
-        likes.text = "Likes:\((Int(intLike) ?? 0) + 1)"
+    
+    @objc private func viewing() {
+        delegateView?.viewing(views: views, cell: self)
+    }
+    
+    @objc private func liked() {
+        delegate?.liked(like: likes, cell: self)
         
         UIButton.animate(
             withDuration: 0.1,
-            delay: 0.1,
-            usingSpringWithDamping: 0.1,
-            initialSpringVelocity: 0.1,
+            delay: 0,
+            usingSpringWithDamping: 0,
+            initialSpringVelocity: 0,
             options: .curveEaseInOut) {
                 self.likes.alpha = 0
-           }
-            completion: { _ in
-                UIButton.animate(withDuration: 1.0,
-                                 delay: 0.0) {
-                    self.likes.alpha = 1
-                }
             }
+                completion: { _ in
+                    UIButton.animate(withDuration: 0.3,
+                         delay: 0.0) {
+                self.likes.alpha = 1
+        }
     }
-    
-    @objc func viewing(_ sender: UITapGestureRecognizer) {
-        print("viewing!")
-        var strView = views.text
-        var intView = String(strView!.dropFirst(6))
-        likes.text = "Views:\((Int(intView) ?? 0) + 1)"
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -154,16 +142,6 @@ class CustomTableViewCell: UITableViewCell {
             descriptionLabel.leadingAnchor.constraint(equalTo: whiteView.leadingAnchor, constant: 16),
             descriptionLabel.trailingAnchor.constraint(equalTo: whiteView.trailingAnchor, constant: -16),
             
-//            likesButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-//            likesButton.leadingAnchor.constraint(equalTo: whiteView.leadingAnchor, constant: 16),
-//            likesButton.heightAnchor.constraint(equalToConstant: 50),
-//            likesButton.bottomAnchor.constraint(equalTo: whiteView.bottomAnchor),
-//            
-//            viewButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-//            viewButton.trailingAnchor.constraint(equalTo: whiteView.trailingAnchor, constant: -16),
-//            viewButton.heightAnchor.constraint(equalToConstant: 50),
-//            viewButton.bottomAnchor.constraint(equalTo: whiteView.bottomAnchor),
-            
             likes.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             likes.leadingAnchor.constraint(equalTo: whiteView.leadingAnchor, constant: 16),
             likes.heightAnchor.constraint(equalToConstant: 50),
@@ -174,9 +152,7 @@ class CustomTableViewCell: UITableViewCell {
             views.heightAnchor.constraint(equalToConstant: 50),
             views.bottomAnchor.constraint(equalTo: whiteView.bottomAnchor)
         ])
-        
     }
-    
 }
 
 

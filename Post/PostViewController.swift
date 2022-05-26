@@ -64,20 +64,6 @@ class PostViewController: UIViewController {
         $0.numberOfLines = 0
         return $0
     }(UILabel())
-    
-    private func setupGestures() {
-        let setupGestures = UITapGestureRecognizer(target: self, action: #selector(click))
-        likes.addGestureRecognizer(setupGestures)
-   
-//        let setupGesturesView = UITapGestureRecognizer(target: self, action: #selector(viewing))
-//        postView.addGestureRecognizer(setupGesturesView)
-    }
-    
-    @objc private func click() {
-        let strLike = likes.text
-        let intLike = String(strLike!.dropFirst(6))
-        likes.text = "Likes:\((Int(intLike) ?? 0) + 1)"
-        }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -183,3 +169,4 @@ extension PostViewController: UITextFieldDelegate {
         return true
     }
 }
+

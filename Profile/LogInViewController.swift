@@ -35,7 +35,6 @@ class LogInViewController: UIViewController {
         topTextField.font = UIFont.boldSystemFont(ofSize: 16)
         topTextField.translatesAutoresizingMaskIntoConstraints = false
         topTextField.placeholder = "Email or phone"
-        topTextField.delegate
         return topTextField
     }()
     
@@ -47,7 +46,6 @@ class LogInViewController: UIViewController {
         bottomTextField.isSecureTextEntry = true
         bottomTextField.translatesAutoresizingMaskIntoConstraints = false
         bottomTextField.placeholder = "Password"
-        bottomTextField.delegate
         return bottomTextField
     }()
     
@@ -144,7 +142,7 @@ class LogInViewController: UIViewController {
     
                 let vc = ProfileViewController()
                 self.navigationController?.pushViewController(vc, animated: false)
-            }
+          }
 //        Добавь авторизацию перед сдачей!
 //        } else if topTextField.text == login && bottomTextField.text == password {
 //            let vc = ProfileViewController()
@@ -154,7 +152,7 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        var colorSet = hexStringToUIColor(hex: "#4885CC")
+        let colorSet = hexStringToUIColor(hex: "#4885CC")
         buttonDidPressed.backgroundColor = colorSet
         view.addSubview(scrollView)
         
@@ -173,6 +171,7 @@ class LogInViewController: UIViewController {
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+//            для работы при развороте экрана
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -400),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
@@ -186,12 +185,11 @@ class LogInViewController: UIViewController {
             vkImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             vkImage.widthAnchor.constraint(equalToConstant: 100),
             vkImage.heightAnchor.constraint(equalToConstant: 100),
-            
+        
             stackViewText.topAnchor.constraint(equalTo: vkImage.safeAreaLayoutGuide.bottomAnchor, constant: 120),
             stackViewText.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             stackViewText.heightAnchor.constraint(equalToConstant: 100),
             stackViewText.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            
             
             topTextField.leadingAnchor.constraint(equalTo: stackViewText.leadingAnchor, constant: 16),
             
@@ -201,8 +199,6 @@ class LogInViewController: UIViewController {
             dividingStrip.heightAnchor.constraint(equalToConstant: 0.5),
             
             bottomTextField.leadingAnchor.constraint(equalTo: stackViewText.leadingAnchor, constant: 16),
-            
-        
             
             buttonDidPressed.topAnchor.constraint(equalTo: stackViewText.bottomAnchor, constant: 16),
             buttonDidPressed.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
@@ -215,17 +211,5 @@ class LogInViewController: UIViewController {
         ])
     }
 }
-
-extension LogInViewController: UITextFieldDelegate {
-    
-    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if self.bottomTextField.text == nil {
-            self.bottomTextField.text == "" }
-        if self.bottomTextField.text!.count < 5 { self.bottomTextField.isHidden = false }
-        view.endEditing(true)
-        return true
-    }
-    
-    }
     
 

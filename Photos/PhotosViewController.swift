@@ -11,6 +11,12 @@ class PhotosViewController: UIViewController {
     
     private var photos = Photo.makePhoto()
     
+    lazy private var animationView: AnimationView = {
+        let animationView = AnimationView()
+        animationView.delegate = self
+        return animationView
+    }()
+    
     var topCollectionView = NSLayoutConstraint()
     var leadingCollectionView = NSLayoutConstraint()
     var widthCollectionView = NSLayoutConstraint()
@@ -28,6 +34,7 @@ class PhotosViewController: UIViewController {
         viewForAnimate.translatesAutoresizingMaskIntoConstraints = false
         viewForAnimate.backgroundColor = .black
         viewForAnimate.alpha = 0
+        viewForAnimate.isHidden = true
         return viewForAnimate
     }()
     
@@ -35,6 +42,7 @@ class PhotosViewController: UIViewController {
         let detailImage = UIImageView()
         detailImage.translatesAutoresizingMaskIntoConstraints = false
         detailImage.alpha = 0
+        detailImage.isHidden = true
         return detailImage
     }()
     
@@ -71,40 +79,26 @@ class PhotosViewController: UIViewController {
     }
     
     @objc private func tapInCat() {
-        
-        UIView.animateKeyframes(withDuration: 0.9, delay: 0) {
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.3) {
-                self.cancelShowPhoto.alpha = 0
-                self.view.layoutIfNeeded()
-            }
-            UIView.addKeyframe(withRelativeStartTime: 0.3, relativeDuration: 0.9) {
-                self.viewForAnimate.alpha = 0
-                            self.heightCollectionView.constant = 0
-                            self.widthCollectionView.constant = 0
-                            self.leadingCollectionView.constant = 0
-                            self.topCollectionView.constant = 0
-                self.detailImage.alpha = 1
-                self.view.layoutIfNeeded()
-            }
-        }
+//        print("gg")
+//        UIView.animate(withDuration: 0.5,
+//                       delay: 0.1,
+//                       usingSpringWithDamping: 1,
+//                       initialSpringVelocity: 0.3,
+//                       options: .curveEaseInOut) {
+//
+//        }
     }
-        
-        
-        //                self.topCatImageView.constant = UIScreen.main.bounds.midY / 3
-        //                self.leadingCatImageView.isActive = false
-        //                self.widthCatImageView.constant = UIScreen.main.bounds.width
-        //                self.heightCatImageView.constant = UIScreen.main.bounds.width
-        //                self.layoutIfNeeded()
-        
 
 
 
 
 
 private func layout(){
-    [collectionView, viewForAnimate, detailImage, cancelShowPhoto].forEach { view.addSubview($0) }
+    [collectionView, viewForAnimate, detailImage, animationView].forEach { view.addSubview($0) }
     
-    setupGestures()
+    
+    
+//    setupGestures()
     
     topCollectionView = detailImage.topAnchor.constraint(equalTo: view.topAnchor)
     leadingCollectionView = detailImage.leadingAnchor.constraint(equalTo: view.leadingAnchor)
@@ -112,6 +106,11 @@ private func layout(){
     heightCollectionView = detailImage.heightAnchor.constraint(equalToConstant: 100)
     
     NSLayoutConstraint.activate([
+        animationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+        animationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+        animationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        animationView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        
         viewForAnimate.leadingAnchor.constraint(equalTo: view.leadingAnchor),
         viewForAnimate.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
         viewForAnimate.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -128,10 +127,11 @@ private func layout(){
         widthCollectionView,
         heightCollectionView,
         
-        cancelShowPhoto.topAnchor.constraint(equalTo: viewForAnimate.topAnchor, constant: 20),
-        cancelShowPhoto.trailingAnchor.constraint(equalTo: viewForAnimate.trailingAnchor, constant: -20),
-        cancelShowPhoto.heightAnchor.constraint(equalToConstant: 30),
-        cancelShowPhoto.widthAnchor.constraint(equalToConstant: 30)
+        
+//        cancelShowPhoto.topAnchor.constraint(equalTo: viewForAnimate.topAnchor, constant: 20),
+//        cancelShowPhoto.trailingAnchor.constraint(equalTo: viewForAnimate.trailingAnchor, constant: -20),
+//        cancelShowPhoto.heightAnchor.constraint(equalToConstant: 30),
+//        cancelShowPhoto.widthAnchor.constraint(equalToConstant: 30),
     ])
 }
 }
@@ -154,43 +154,6 @@ extension PhotosViewController: UICollectionViewDataSource {
     }
 }
 
-// MARK: - UICollectionViewDelegate
-extension PhotosViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        detailImage.image = photos[indexPath.row].image
-        
-        UIView.animateKeyframes(withDuration: 0.8, delay: 0) {
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.7) {
-                self.viewForAnimate.alpha = 0.5
-                self.heightCollectionView.constant = UIScreen.main.bounds.height
-                self.widthCollectionView.constant = UIScreen.main.bounds.width
-                self.leadingCollectionView.constant = 0
-                self.topCollectionView.constant = -50
-                self.detailImage.layer.cornerRadius = 0
-                self.detailImage.alpha = 1
-                self.detailImage.contentMode = .scaleAspectFit
-                self.view.layoutIfNeeded()
-            }
-            UIView.addKeyframe(withRelativeStartTime: 0.7, relativeDuration: 1) {
-                self.cancelShowPhoto.alpha = 1
-                self.view.layoutIfNeeded()
-            }
-        }
-           }
-            //            UIView.animate(
-            //                withDuration: 0.5,
-            //                delay: 0.1,
-            //                usingSpringWithDamping: 1,
-            //                initialSpringVelocity: 0.3,
-            //                options: .curveEaseInOut) {
-            //
-            //                    self.indexPath = UIScreen.main.bounds.midY / 3
-            //                    self.leadingCatImageView.isActive = false
-            //                    self.widthCatImageView.constant = UIScreen.main.bounds.width
-            //                    self.heightCatImageView.constant = UIScreen.main.bounds.width
-            //                    self.layoutIfNeeded()
-        }
-
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
@@ -212,5 +175,43 @@ extension PhotosViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         inset
     }
+}
+
+
+extension PhotosViewController: AnimationViewDelagate {
+    func animationViewDidSelectClose(view: AnimationView) {
+        print("Закрыт")
+    }
+    
+    func animationViewDidStartAnimation(view: AnimationView) {
+        print("Погнали")
+    }
+    
+    func animationViewDidFinishAnimation(view: AnimationView) {
+        print("8(((")
+    }
+    
+    
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension PhotosViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)  {
+        
+        guard let image = photos[indexPath.row].image else {
+            print("А где картинка то?")
+            return
+        }
+        
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            print("А где ячейка то?")
+            return
+        }
+        
+        // TODO: - Тут нужно посчитать правильно POINT и SIZE
+ 
+        animationView.startAnimation(point: cell.frame.origin, size: cell.frame.size, image: image)
+}
 }
 

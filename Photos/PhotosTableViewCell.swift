@@ -128,7 +128,7 @@ extension PhotosTableViewCell: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let width = (collectionView.bounds.width - inset * 4) / 4
+        let width = (collectionView.bounds.width - inset * 4) / 3
         return CGSize(width: width, height: width)
     }
     

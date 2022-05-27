@@ -7,140 +7,157 @@
 
 import UIKit
 
-protocol AnimationViewDelagate: AnyObject {
-    func animationViewDidSelectClose(view: AnimationView)
-    func animationViewDidStartAnimation(view: AnimationView)
-    func animationViewDidFinishAnimation(view: AnimationView)
-}
+// MARK: -
 
 class AnimationView: UIView {
-    
-    weak var delegate: AnimationViewDelagate?
-    
-    private lazy var detailImageView: UIImageView = {
-        let detailImage = UIImageView()
-        detailImage.translatesAutoresizingMaskIntoConstraints = false
-        detailImage.isHidden = true
-        return detailImage
+
+    // MARK: - Private Properties
+
+    private lazy var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        return imageView
     }()
-    
+
     private lazy var backgroundView: UIView = {
-        let backgroundView = UIView()
-        backgroundView.translatesAutoresizingMaskIntoConstraints = false
-        backgroundView.backgroundColor = .black
-        backgroundView.isHidden = true
-        backgroundView.alpha = 0
-        return backgroundView
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .black
+        view.isHidden = true
+        view.alpha = 0.0
+        return view
     }()
-    
-    
+
     private lazy var closeButton: UIButton = {
-        let closeButton = UIButton()
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.isHidden = true
-        closeButton.alpha = 0
-        closeButton.setBackgroundImage(UIImage(systemName: "xmark"), for: .normal)
-        closeButton.addTarget(self, action: #selector(closeAction), for: .touchUpInside)
-        return closeButton
+        let button = UIButton()
+        button.addTarget(self, action: #selector(closeAction), for: .touchUpInside)
+        button.setBackgroundImage(UIImage(systemName: "xmark"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isHidden = true
+        button.alpha = 0.0
+        return button
     }()
-    
-    private var detailImageViewTopLayoutContraint = NSLayoutConstraint()
-    private var detailImageViewLeadingLayoutContraint = NSLayoutConstraint()
-    private var detailImageViewWidghLayoutContraint = NSLayoutConstraint()
-    private var detailImageViewHightLayoutContraint = NSLayoutConstraint()
-    
-    
-    
-    @objc private func closeAction (sender: UIButton) {
-        delegate?.animationViewDidSelectClose(view: self)
-    }
-        
-    
-    func startAnimation(point: CGPoint, size: CGSize, image: UIImage) {
-        detailImageViewTopLayoutContraint.constant = point.y
-        detailImageViewLeadingLayoutContraint.constant = point.x
-        detailImageViewHightLayoutContraint.constant = size.height
-        detailImageViewWidghLayoutContraint.constant = size.width
-        detailImageView.image = image
-        delegate?.animationViewDidStartAnimation(view: self)
-        
-        closeButton.isHidden = false
-        detailImageView.isHidden = false
-        backgroundView.isHidden = false
-        self.isHidden = false
-        
-        
-        UIView.animate(
-            withDuration: 0.5,
-            delay: 0.1,
-            usingSpringWithDamping: 1,
-            initialSpringVelocity: 0.3,
-            options: .curveEaseInOut) {
-                
-                
-//                self.closeAnimationButton.isHidden = true
-//                self.catImageView.center = CGPoint(x: self.catViewX, y: self.catViewY)
-//                self.topCatImageView.constant = self.bounds.minY + 16
-//                self.leadingCatImageView.isActive = true
-//                self.widthCatImageView.constant = 100
-//                self.heightCatImageView.constant = 100
-//                self.blackView.isHidden = true
-//                self.catImageView.layer.cornerRadius = self.catImageView.bounds.width / 2
-                
-                
-                
-                self.closeButton.alpha = 1
-                self.detailImageView.alpha = 1
-                self.backgroundView.alpha = 0.9
-                
-                let length: CGFloat = 150.0
-                
-                self.detailImageViewHightLayoutContraint.constant = length
-                self.detailImageViewWidghLayoutContraint.constant = length
-                self.detailImageViewTopLayoutContraint.constant = self.frame.midY - length / 2
-                self.detailImageViewLeadingLayoutContraint.constant = self.frame.midX - length / 2
-                
-                self.layoutIfNeeded()
-            }
-    }
 
+    private var imageViewLeadingLayoutContraint = NSLayoutConstraint()
+    private var imageViewHeightLayoutContraint = NSLayoutConstraint()
+    private var imageViewWidthLayoutContraint = NSLayoutConstraint()
+    private var imageViewTopLayoutContraint = NSLayoutConstraint()
 
+    private var startPoint: CGPoint = CGPoint.zero
+    private var startSize: CGSize = CGSize.zero
+
+    // MARK: - Initializers
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         layout()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    // MARK: - Public Methods
+
+    func animateZoomIn(point: CGPoint, size: CGSize, image: UIImage) {
+        startPoint = point
+        startSize = size
+
+        imageView.image = image
+
+        imageViewLeadingLayoutContraint.constant = startPoint.x
+        imageViewHeightLayoutContraint.constant = startSize.height
+        imageViewWidthLayoutContraint.constant = startSize.width
+        imageViewTopLayoutContraint.constant = startPoint.y
+
+        isHidden = false
+        backgroundView.isHidden = false
+        imageView.isHidden = false
+        closeButton.isHidden = false
+
+        self.layoutIfNeeded()
+
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.1,
+            usingSpringWithDamping: 1.0,
+            initialSpringVelocity: 0.3,
+            options: .curveEaseInOut) {
+
+                self.backgroundView.alpha = 0.9
+                self.imageView.alpha = 1.0
+                self.closeButton.alpha = 1.0
+
+                let length: CGFloat = 300.0
+
+                self.imageViewLeadingLayoutContraint.constant = (self.frame.width - length) / 2.0
+                self.imageViewHeightLayoutContraint.constant = length
+                self.imageViewWidthLayoutContraint.constant = length
+                self.imageViewTopLayoutContraint.constant = (self.frame.height - length) / 2.0
+
+                self.layoutIfNeeded()
+            }
+    }
+
+    private func animateZoomOut() {
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.1,
+            usingSpringWithDamping: 1.0,
+            initialSpringVelocity: 0.3,
+            options: .curveEaseOut) {
+
+            self.backgroundView.alpha = 0.0
+            self.imageView.alpha = 0.0
+            self.closeButton.alpha = 0.0
+
+            self.imageViewLeadingLayoutContraint.constant = self.startPoint.x
+            self.imageViewHeightLayoutContraint.constant = self.startSize.height
+            self.imageViewWidthLayoutContraint.constant = self.startSize.width
+            self.imageViewTopLayoutContraint.constant = self.startPoint.y
+
+            self.layoutIfNeeded()
+
+        } completion: { finish in
+
+            self.isHidden = true
+            self.backgroundView.isHidden = true
+            self.imageView.isHidden = true
+            self.closeButton.isHidden = true
+        }
+    }
+
+    // MARK: - Private Methods
+
     private func layout() {
-        
-        [backgroundView, detailImageView, closeButton].forEach { addSubview($0) }
-        
         self.isHidden = true
-        
-        detailImageViewTopLayoutContraint = self.topAnchor.constraint(equalTo: self.topAnchor, constant: 0)
-        detailImageViewLeadingLayoutContraint = self.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0)
-        detailImageViewWidghLayoutContraint = self.widthAnchor.constraint(equalToConstant: 0)
-        detailImageViewHightLayoutContraint = self.heightAnchor.constraint(equalToConstant: 0)
-    
-        
+
+        [backgroundView, imageView, closeButton].forEach { addSubview($0) }
+
+        imageViewTopLayoutContraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 0.0)
+        imageViewLeadingLayoutContraint = imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0.0)
+        imageViewWidthLayoutContraint = imageView.widthAnchor.constraint(equalToConstant: 0.0)
+        imageViewHeightLayoutContraint = imageView.heightAnchor.constraint(equalToConstant: 0.0)
+
         NSLayoutConstraint.activate([
-            
-            backgroundView.topAnchor.constraint(equalTo: self.topAnchor),
-            backgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            backgroundView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            backgroundView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-           
-            detailImageViewTopLayoutContraint,
-            detailImageViewLeadingLayoutContraint,
-            detailImageViewWidghLayoutContraint,
-            detailImageViewHightLayoutContraint,
-            
-            closeButton.topAnchor.constraint(equalTo: self.topAnchor),
-            closeButton.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            backgroundView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            imageViewTopLayoutContraint,
+            imageViewLeadingLayoutContraint,
+            imageViewWidthLayoutContraint,
+            imageViewHeightLayoutContraint,
+
+            closeButton.topAnchor.constraint(equalTo: topAnchor, constant: 24.0),
+            closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24.0)
         ])
+    }
+
+    @objc private func closeAction (sender: UIButton) {
+        animateZoomOut()
     }
 }

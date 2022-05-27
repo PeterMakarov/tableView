@@ -41,7 +41,7 @@ class PhotosTableViewCell: UITableViewCell {
     private lazy var collectionView: UICollectionView = {
         let layoutCollectionView = UICollectionViewFlowLayout()
         layoutCollectionView.scrollDirection = .horizontal
-        
+
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layoutCollectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
@@ -111,7 +111,7 @@ extension PhotosTableViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
-        cell.setupCell(photo: photos[indexPath.row])
+        cell.setupCell(with: photos[indexPath.row])
         cell.layer.cornerRadius = 6
         cell.backgroundColor = .white
         cell.clipsToBounds = true
